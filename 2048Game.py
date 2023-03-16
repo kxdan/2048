@@ -1,15 +1,3 @@
-#class Bar:
-#  def __init__(self, Foo):
-#    self.foo = Foo
-
-#def FooBar():
-
-#https://www.codeabbey.com/index/task_view/game-of-2048
-
-
-
-
-
 moves = "D R D L U"
 
 
@@ -60,7 +48,6 @@ def move(direction, grid):
         for x in range(1, gridlen):
             currentValue = grid[x][j]
         
-            #Potential continue loop?
             if (x+1 < gridlen):
                 nextVal = grid[x+1][j]
                 if(currentValue == prevValue and currentValue == nextVal):
@@ -80,8 +67,6 @@ def move(direction, grid):
             
             prevValue = currentValue
 
-        #Going through and removing all the 0's that now exist in the column
-        #check if the array actually has N zero, removes all those zeros by index, and then add to the start the array the number of zeros
         prevValue = grid[0][j]
         arrayToPop = []
 
@@ -105,46 +90,5 @@ def move(direction, grid):
 
     print(grid)
 
-    
-
-
-
-
-
-
-
-
-    #If values are the same we can combine them but if they are not the same we cannot combine them 
-
-    #Look through each up to down, if there's a zero, expand the window, if not, and combine then we can combine them
-
-    #Case is val1 + val2 = val1 || val1*2 -> combine them.
-
-
-
-    #Case 1: can't do a combine
-        #Situation: 2,4,2,0
-        #output: same
-    
-    #Case 2: combine with no intermediary
-        #Situation: 2,2,4,0
-        #output: 
-
-
-
-
-
-
-
-
-#    for element in board:
-        
-        
-
-#    if direction == "D":
-
-
-
-#def moveDown(grid):
 
 main("d", board)
