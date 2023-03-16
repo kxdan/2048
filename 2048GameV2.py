@@ -89,13 +89,15 @@ def shiftDown(array):
     array.reverse()
     return shiftHorizontal(array, "right")
 
-def shiftUp(array):
-    return shiftHorizontal(array, "left")
+#def shiftUp(array):
+#    return shiftHorizontal(array, "left")
 
 #assert([4,4,2,0] == shiftLeft([2,2,4,2]))
 #assert([4,2,4,0] == shiftLeft([2,2,2,4]))
 
-assert([0,4,4,2] == shiftRight([2,2,4,2]))
+#assert([0,4,4,2] == shiftRight([2,2,4,2]))
+
+assert([0,2,4,4] == shiftDown([2,4,2,2]))
 
 #downshiftGrid = [[0,0,0,0],[2,2,0,2],[4,4,4,4],[4,4,4,4]]
 #board = """2 2 4 2
