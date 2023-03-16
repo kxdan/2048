@@ -37,7 +37,7 @@ board = """2 2 4 2
 2 4 0 2
 """
 
-def handleEmpty(Direction, grid):
+def handleEmpty(grid, Direction):
     count = 0
     newArray = []
     for element in grid:
@@ -51,13 +51,13 @@ def handleEmpty(Direction, grid):
             newArray.append(0)
 
     if Direction == "right":
+        newArray.reverse()
         for x in range(0, count):
             newArray.insert(0, 0)
 
     return newArray
 
-def shiftLeft(array):
-
+def shiftHorizontal(array, Direction):
     #[2,2,4,2]
     #[4,4,2,0]
 
@@ -75,12 +75,34 @@ def shiftLeft(array):
             array[x] = firstValue
             array[x+1] = 0
 
-    filteredArray = handleEmpty("left", array)
+    filteredArray = handleEmpty(array, Direction)
     return filteredArray
 
-assert([4,4,2,0] == shiftLeft([2,2,4,2]))
-assert([4,2,4,0] == shiftLeft([2,2,2,4]))
+def shiftLeft(array):
+    return shiftHorizontal(array, "left")
 
+def shiftRight(array):
+    array.reverse()
+    return shiftHorizontal(array, "right")
+
+def shiftDown(array):
+    array.reverse()
+    return shiftHorizontal(array, "right")
+
+def shiftUp(array):
+    return shiftHorizontal(array, "left")
+
+#assert([4,4,2,0] == shiftLeft([2,2,4,2]))
+#assert([4,2,4,0] == shiftLeft([2,2,2,4]))
+
+assert([0,4,4,2] == shiftRight([2,2,4,2]))
+
+#downshiftGrid = [[0,0,0,0],[2,2,0,2],[4,4,4,4],[4,4,4,4]]
+#board = """2 2 4 2
+#4 2 2 4
+#2 2 2 2
+#2 4 0 2
+#"""
 
 board = """2 2 4 2
 4 2 2 4
