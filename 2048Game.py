@@ -41,6 +41,13 @@ board = """2 2 4 2
 2 4 0 2
 """
 
+board1 = """2 2 4 2
+2 2 2 4
+2 2 2 2
+2 4 0 2
+"""
+
+
 boardMovedLeft = """4 4 2 0
 4 4 4 0
 4 4 0 0
@@ -73,7 +80,7 @@ def moveLeft(grid):
                     firstElement = grid[row]
                     for element in grid:
                         if element != firstElement:
-                            allEqual == False
+                            allEqual = False
 
                     #check they're not all equal
                     if not allEqual:
@@ -122,24 +129,37 @@ def moveDown(grid):
 
     previouslyCombined = [[False]*gridlen for _ in range(gridlen)]
 
-    for j in range(len(grid[0])):
+    for column in range(len(grid[0])):
 
-        prevValue = grid[0][j]
-        for x in range(1, gridlen):
-            currentValue = grid[x][j]
+        prevValue = grid[0][column]
+        for row in range(1, gridlen):
+            currentValue = grid[row][column]
         
-            if (x+1 < gridlen):
-                nextVal = grid[x+1][j]
+            if (row+1 < gridlen):
+                nextVal = grid[row+1][column]
                 if(currentValue == prevValue and currentValue == nextVal):
-                    continue
 
-            if prevValue == currentValue and not previouslyCombined[x-1][j]:
-                previouslyCombined[x][j] = True 
+                    allEqual = True
+                    allElements = []
+                    for index in range(0, gridlen):
+                        allElements.append(grid[index][column])
+
+                    firstElement = allElements[0]
+                    for element in allElements:
+                        if element != firstElement:
+                            allEqual = False
+
+                    #check they're not all equal
+                    if not allEqual:
+                        continue
+
+            if prevValue == currentValue and not previouslyCombined[row-1][column]:
+                previouslyCombined[row][column] = True 
                 currentValue=prevValue+currentValue 
-                grid[x][j] = currentValue
-                grid[x-1][j] = 0
+                grid[row][column] = currentValue
+                grid[row-1][column] = 0
             else:
-                grid[x][j] = currentValue
+                grid[row][column] = currentValue
             
             if currentValue == 0:
                 currentValue = prevValue
@@ -147,11 +167,11 @@ def moveDown(grid):
             
             prevValue = currentValue
 
-        prevValue = grid[0][j]
+        prevValue = grid[0][column]
         arrayToPop = []
 
         for x in range(0, gridlen):
-            arrayToPop.append(grid[x][j])     
+            arrayToPop.append(grid[x][column])     
 
         countOfZeros = 0
 
@@ -166,7 +186,7 @@ def moveDown(grid):
             filteredArray.insert(0,0)
 
         for x in range(0, len(filteredArray)):
-            grid[x][j] = filteredArray[x]
+            grid[x][column] = filteredArray[x]
 
     return grid
 
