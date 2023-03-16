@@ -77,8 +77,8 @@ def moveLeft(grid):
                 if(currentValue == prevValue and currentValue == nextVal):
 
                     allEqual = True
-                    firstElement = grid[row]
-                    for element in grid:
+                    firstElement = grid[row][0]
+                    for element in grid[row]:
                         if element != firstElement:
                             allEqual = False
 
