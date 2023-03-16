@@ -1,4 +1,6 @@
 import copy
+import numpy as np
+
 moves = "D R D L U"
 
 
@@ -21,6 +23,8 @@ def main(direction, grid):
     mapToDownshift = parsedMap.copy()
     mapToMoveLeft = copy.deepcopy(parsedMap)
 
+    mapToUpshift = copy.deepcopy(parsedMap)
+
     downshiftGrid = [[0,0,0,0],[2,2,0,2],[4,4,4,4],[4,4,4,4]]
 
     resultingGridDown = moveDown(mapToDownshift)
@@ -33,6 +37,17 @@ def main(direction, grid):
 
     assert(resultingGridLeft == leftShiftGrid)
 
+    upshiftedGrid = [[2,2,4,2],[4,4,4,4],[4,4,0,4],[0,0,0,0]]
+
+    arr = np.array(mapToDownshift)
+
+    flipped_arr = np.flipud(arr)
+
+    npresultingGridUp = np.array(moveDown(mapToUpshift))
+
+    resultingGridUp = np.flipud(npresultingGridUp)
+
+    assert(upshiftedGrid == resultingGridUp)
     print("x") 
 
 board = """2 2 4 2
@@ -40,13 +55,6 @@ board = """2 2 4 2
 2 2 2 2
 2 4 0 2
 """
-
-board1 = """2 2 4 2
-2 2 2 4
-2 2 2 2
-2 4 0 2
-"""
-
 
 boardMovedLeft = """4 4 2 0
 4 4 4 0
@@ -189,5 +197,55 @@ def moveDown(grid):
             grid[x][column] = filteredArray[x]
 
     return grid
+
+def moveUp(grid):
+    gridlen = len(grid)
+    previouslyCombined = [[False]*gridlen for _ in range(gridlen)]
+    for column in range(len(grid[0])):
+        prevValue = grid[0][column]
+        for row in range(1, gridlen):
+            currentValue = grid[row][column]
+            if (row-1 >= 0):
+                nextVal = grid[row-1][column]
+                if(currentValue == prevValue and currentValue == nextVal):
+                    allEqual = True
+                    allElements = []
+                    for index in range(0, gridlen):
+                        allElements.append(grid[index][column])
+                    firstElement = allElements[0]
+                    for element in allElements:
+                        if element != firstElement:
+                            allEqual = False
+                    #check they're not all equal
+                    if not allEqual:
+                        continue
+            if prevValue == currentValue and not previouslyCombined[row-1][column]:
+                previouslyCombined[row][column] = True 
+                currentValue=prevValue+currentValue 
+                grid[row][column] = currentValue
+                grid[row+1][column] = 0
+            else:
+                grid[row][column] = currentValue
+            if currentValue == 0:
+                currentValue = prevValue
+                prevValue = 0
+            prevValue = currentValue
+        prevValue = grid[0][column]
+        arrayToPop = []
+        for x in range(0, gridlen):
+            arrayToPop.append(grid[x][column])     
+        countOfZeros = 0
+        filteredArray = []
+        for element in arrayToPop:
+            if element != 0:
+                filteredArray.append(element)
+            else:
+                countOfZeros+=1
+        for x in range(0, countOfZeros):
+            filteredArray.append(0)
+        for x in range(0, len(filteredArray)):
+            grid[x][column] = filteredArray[x]
+    return grid
+
 
 main("d", board)
