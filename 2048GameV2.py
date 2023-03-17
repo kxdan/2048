@@ -78,26 +78,111 @@ def shiftHorizontal(array, Direction):
     filteredArray = handleEmpty(array, Direction)
     return filteredArray
 
-def shiftLeft(array):
+def shiftGridLeft(grid):
+    newGrid = []
+    for row in grid:
+        newGrid.append(shiftArrayLeft(row))
+
+    return newGrid
+
+def shiftGridRight(grid):
+    newGrid = []
+    for row in grid:
+        newGrid.append(shiftArrayRight(row))
+
+    return newGrid
+
+
+def untransposeGrid(grid):
+    untransposedGrid = []
+    for i in range(len(grid[0])):
+        row =[]
+        for item in grid:
+            row.append(item[i])
+        untransposedGrid.append(row)
+    return untransposedGrid
+
+def shiftGridDown(grid):
+    
+    #Get Number of columns
+    numColumns = 0
+    if len(grid) > 0:
+        numColumns = len(grid[0])    
+
+    #Turn Columns into rows
+    transposedGrid = []
+    for column in range(0, numColumns):
+        row = [i[column] for i in grid]
+        modifiedRow = shiftArrayDown(row)
+        transposedGrid.append(modifiedRow)
+
+    #turn each element in a row back into a column
+    return untransposeGrid(transposedGrid)
+
+
+def shiftGridUp(grid):
+    
+    #Get Number of columns
+    numColumns = 0
+    if len(grid) > 0:
+        numColumns = len(grid[0])    
+
+    #Turn Columns into rows
+    transposedGrid = []
+    for column in range(0, numColumns):
+        row = [i[column] for i in grid]
+        modifiedRow = shiftArrayUp(row)
+        transposedGrid.append(modifiedRow)
+
+    #turn each element in a row back into a column
+    x = untransposeGrid(transposedGrid)
+    return x
+
+
+def shiftArrayLeft(array):
+    #change left / right to false/true
     return shiftHorizontal(array, "left")
 
-def shiftRight(array):
+def shiftArrayRight(array):
     array.reverse()
     return shiftHorizontal(array, "right")
 
-def shiftDown(array):
+def shiftArrayDown(array):
     array.reverse()
     return shiftHorizontal(array, "right")
 
-#def shiftUp(array):
-#    return shiftHorizontal(array, "left")
+def shiftArrayUp(array):
+    return shiftHorizontal(array, "left")
 
+    
 #assert([4,4,2,0] == shiftLeft([2,2,4,2]))
-#assert([4,2,4,0] == shiftLeft([2,2,2,4]))
-
+#assert([4,2,4,0] == shiftArrayLeft([2,2,2,4]))
+#assert([] == shiftArrayRight([2,2,2,4]))
 #assert([0,4,4,2] == shiftRight([2,2,4,2]))
+#assert([0,2,4,4] == shiftDown([2,4,2,2]))
 
-assert([0,2,4,4] == shiftDown([2,4,2,2]))
+#Special Cases
+#assert([0,2,4,4] == shiftArrayDown([2,2,2,4]))
+#assert([4,2,4,0] == shiftArrayUp([2,2,2,4]))
+
+#assert([0,2,4,4] == shiftArrayRight([2,2,2,4]))
+#assert([4,2,4,0] == shiftArrayLeft[2,2,2,4])
+
+
+#shiftArrayLeft([2,2,2,4])
+
+OG = [[2,2,4,2],[4,2,2,4],[2,2,2,2],[2,4,0,2]]
+#leftShiftGrid = [[4,4,2,0],[4,4,4,0],[4,4,0,0],[2,4,2,0]]
+#rightShiftGrid = [[0,4,4,2],[0,4,4,4],[0,0,4,4],[0,2,4,2]]
+upShiftGrid = [[2,4,4,2],[4,2,4,4],[4,4,0,4],[0,0,0,0]]
+#downShiftGrid = [[0,0,0,0],[2,2,0,2],[4,4,4,4],[4,4,4,4]]
+
+
+#assert(leftShiftGrid == shiftGridLeft(OG))
+#assert(rightShiftGrid == shiftGridRight(OG))
+#assert(downShiftGrid == shiftGridDown(OG))
+assert(upShiftGrid == shiftGridUp(OG))
+
 
 #downshiftGrid = [[0,0,0,0],[2,2,0,2],[4,4,4,4],[4,4,4,4]]
 #board = """2 2 4 2
