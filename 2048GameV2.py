@@ -29,15 +29,8 @@ def main(direction, grid):
 
     assert(resultingGridLeft == leftShiftGrid)
 
-    print("x") 
 
-board = """2 2 4 2
-4 2 2 4
-2 2 2 2
-2 4 0 2
-"""
-
-def handleEmpty(grid, Direction):
+def handleEmpty(grid, isReverse):
     count = 0
     newArray = []
     for element in grid:
@@ -46,21 +39,18 @@ def handleEmpty(grid, Direction):
         else: 
             newArray.append(element)
 
-    if Direction == "left":
+    if not isReverse:
         for x in range(0, count):
             newArray.append(0)
 
-    if Direction == "right":
+    if isReverse:
         newArray.reverse()
         for x in range(0, count):
             newArray.insert(0, 0)
 
     return newArray
 
-def shiftHorizontal(array, Direction):
-    #[2,2,4,2]
-    #[4,4,2,0]
-
+def shiftHorizontal(array, isReverse):
     for x in range (0, len(array)):
         firstValue = array[x]
 
@@ -75,7 +65,7 @@ def shiftHorizontal(array, Direction):
             array[x] = firstValue
             array[x+1] = 0
 
-    filteredArray = handleEmpty(array, Direction)
+    filteredArray = handleEmpty(array, isReverse)
     return filteredArray
 
 def shiftGridLeft(grid):
@@ -139,20 +129,23 @@ def shiftGridUp(grid):
     return x
 
 
+#Left and Up are the same. Maintaining two functions for readability
 def shiftArrayLeft(array):
-    #change left / right to false/true
-    return shiftHorizontal(array, "left")
+    return shiftHorizontal(array, False)
 
+def shiftArrayUp(array):
+    return shiftHorizontal(array, False)
+
+#Right and Down are the same. Maintaining two functions for readability
 def shiftArrayRight(array):
     array.reverse()
-    return shiftHorizontal(array, "right")
+    return shiftHorizontal(array, True)
 
 def shiftArrayDown(array):
     array.reverse()
-    return shiftHorizontal(array, "right")
+    return shiftHorizontal(array, True)
 
-def shiftArrayUp(array):
-    return shiftHorizontal(array, "left")
+
 
     
 #assert([4,4,2,0] == shiftLeft([2,2,4,2]))
@@ -177,34 +170,13 @@ OG = [[2,2,4,2],[4,2,2,4],[2,2,2,2],[2,4,0,2]]
 upShiftGrid = [[2,4,4,2],[4,2,4,4],[4,4,0,4],[0,0,0,0]]
 #downShiftGrid = [[0,0,0,0],[2,2,0,2],[4,4,4,4],[4,4,4,4]]
 
-
 #assert(leftShiftGrid == shiftGridLeft(OG))
 #assert(rightShiftGrid == shiftGridRight(OG))
 #assert(downShiftGrid == shiftGridDown(OG))
 assert(upShiftGrid == shiftGridUp(OG))
 
-
-#downshiftGrid = [[0,0,0,0],[2,2,0,2],[4,4,4,4],[4,4,4,4]]
-#board = """2 2 4 2
-#4 2 2 4
-#2 2 2 2
-#2 4 0 2
-#"""
-
 board = """2 2 4 2
 4 2 2 4
 2 2 2 2
 2 4 0 2
-"""
-
-boardMovedLeft = """4 4 2 0
-4 4 4 0
-4 4 0 0
-2 4 2 0
-"""
-
-boardMovedDown = """0 0 0 0
-2 2 0 2
-4 4 4 4
-4 4 4 4
 """
