@@ -71,17 +71,16 @@ def shiftHorizontal(array, isReverse):
 def shiftGridLeft(grid):
     newGrid = []
     for row in grid:
-        newGrid.append(shiftArrayLeft(row))
+        newGrid.append(shiftArrayLeft(list(row)))
 
     return newGrid
 
 def shiftGridRight(grid):
     newGrid = []
     for row in grid:
-        newGrid.append(shiftArrayRight(row))
+        newGrid.append(shiftArrayRight(list(row)))
 
     return newGrid
-
 
 def untransposeGrid(grid):
     untransposedGrid = []
@@ -103,10 +102,10 @@ def shiftGridDown(grid):
     transposedGrid = []
     for column in range(0, numColumns):
         row = [i[column] for i in grid]
-        modifiedRow = shiftArrayDown(row)
+        modifiedRow = shiftArrayDown(list(row))
         transposedGrid.append(modifiedRow)
 
-    #turn each element in a row back into a column
+    #Turn rows back into columns
     return untransposeGrid(transposedGrid)
 
 
@@ -121,12 +120,11 @@ def shiftGridUp(grid):
     transposedGrid = []
     for column in range(0, numColumns):
         row = [i[column] for i in grid]
-        modifiedRow = shiftArrayUp(row)
+        modifiedRow = shiftArrayUp(list(row))
         transposedGrid.append(modifiedRow)
 
-    #turn each element in a row back into a column
-    x = untransposeGrid(transposedGrid)
-    return x
+    #Turn rows back into columns
+    return untransposeGrid(transposedGrid)
 
 
 #Left and Up are the same. Maintaining two functions for readability
@@ -165,14 +163,14 @@ def shiftArrayDown(array):
 #shiftArrayLeft([2,2,2,4])
 
 OG = [[2,2,4,2],[4,2,2,4],[2,2,2,2],[2,4,0,2]]
-#leftShiftGrid = [[4,4,2,0],[4,4,4,0],[4,4,0,0],[2,4,2,0]]
-#rightShiftGrid = [[0,4,4,2],[0,4,4,4],[0,0,4,4],[0,2,4,2]]
+leftShiftGrid = [[4,4,2,0],[4,4,4,0],[4,4,0,0],[2,4,2,0]]
+rightShiftGrid = [[0,4,4,2],[0,4,4,4],[0,0,4,4],[0,2,4,2]]
 upShiftGrid = [[2,4,4,2],[4,2,4,4],[4,4,0,4],[0,0,0,0]]
-#downShiftGrid = [[0,0,0,0],[2,2,0,2],[4,4,4,4],[4,4,4,4]]
+downShiftGrid = [[0,0,0,0],[2,2,0,2],[4,4,4,4],[4,4,4,4]]
 
-#assert(leftShiftGrid == shiftGridLeft(OG))
-#assert(rightShiftGrid == shiftGridRight(OG))
-#assert(downShiftGrid == shiftGridDown(OG))
+assert(leftShiftGrid == shiftGridLeft(OG))
+assert(rightShiftGrid == shiftGridRight(OG))
+assert(downShiftGrid == shiftGridDown(OG))
 assert(upShiftGrid == shiftGridUp(OG))
 
 board = """2 2 4 2
