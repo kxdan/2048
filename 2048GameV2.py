@@ -68,20 +68,6 @@ def shiftHorizontal(array, isReverse):
     filteredArray = handleEmpty(array, isReverse)
     return filteredArray
 
-def shiftGridLeft(grid):
-    newGrid = []
-    for row in grid:
-        newGrid.append(shiftArrayLeft(list(row)))
-
-    return newGrid
-
-def shiftGridRight(grid):
-    newGrid = []
-    for row in grid:
-        newGrid.append(shiftArrayRight(list(row)))
-
-    return newGrid
-
 def untransposeGrid(grid):
     untransposedGrid = []
     for i in range(len(grid[0])):
@@ -91,8 +77,17 @@ def untransposeGrid(grid):
         untransposedGrid.append(row)
     return untransposedGrid
 
-def shiftGridDown(grid):
-    
+def shiftGridHorizontal(grid, isLeftShift):
+    newGrid = []
+    for row in grid:
+        if isLeftShift:
+            newGrid.append(shiftArrayLeft(list(row)))
+        else: 
+            newGrid.append(shiftArrayRight(list(row)))
+
+    return newGrid
+
+def shiftGridVertical(grid, isUpShift):
     #Get Number of columns
     numColumns = 0
     if len(grid) > 0:
@@ -102,25 +97,10 @@ def shiftGridDown(grid):
     transposedGrid = []
     for column in range(0, numColumns):
         row = [i[column] for i in grid]
-        modifiedRow = shiftArrayDown(list(row))
-        transposedGrid.append(modifiedRow)
-
-    #Turn rows back into columns
-    return untransposeGrid(transposedGrid)
-
-
-def shiftGridUp(grid):
-    
-    #Get Number of columns
-    numColumns = 0
-    if len(grid) > 0:
-        numColumns = len(grid[0])    
-
-    #Turn Columns into rows
-    transposedGrid = []
-    for column in range(0, numColumns):
-        row = [i[column] for i in grid]
-        modifiedRow = shiftArrayUp(list(row))
+        if isUpShift:
+            modifiedRow = shiftArrayUp(list(row))
+        else:
+            modifiedRow = shiftArrayDown(list(row))
         transposedGrid.append(modifiedRow)
 
     #Turn rows back into columns
@@ -168,10 +148,10 @@ rightShiftGrid = [[0,4,4,2],[0,4,4,4],[0,0,4,4],[0,2,4,2]]
 upShiftGrid = [[2,4,4,2],[4,2,4,4],[4,4,0,4],[0,0,0,0]]
 downShiftGrid = [[0,0,0,0],[2,2,0,2],[4,4,4,4],[4,4,4,4]]
 
-assert(leftShiftGrid == shiftGridLeft(OG))
-assert(rightShiftGrid == shiftGridRight(OG))
-assert(downShiftGrid == shiftGridDown(OG))
-assert(upShiftGrid == shiftGridUp(OG))
+assert(leftShiftGrid == shiftGridHorizontal(OG, isLeftShift=True))
+assert(rightShiftGrid == shiftGridHorizontal(OG, isLeftShift=False))
+assert(downShiftGrid == shiftGridVertical(OG, isUpShift=False))
+assert(upShiftGrid == shiftGridVertical(OG, isUpShift=True))
 
 board = """2 2 4 2
 4 2 2 4
