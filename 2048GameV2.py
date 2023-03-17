@@ -1,35 +1,6 @@
-import copy
-import numpy as np
-
-moves = "D R D L U"
-
-def main(direction, grid):
-    rows = board.split("\n")
-
-    rows = rows[:len(rows) -1]
-
-    parsedMap = []
-    for row in rows:
-        splitRow = row.split(" ")
-        intRow = []
-        for char in splitRow:
-            #TODO: handle this properly incase of bad values
-            intRow.append(int(char))
-
-        parsedMap.append(intRow)
-
-    
-    mapToDownshift = parsedMap.copy()
-    mapToMoveLeft = copy.deepcopy(parsedMap)
-
-    unused = [[2,2,4,2],[4,2,4,4],[2,2,2,2],[2,4,0,2]]
-    leftShiftGrid = [[4,4,2,0],[4,4,4,0],[4,4,0,0],[2,4,2,0]]
-
-    resultingGridLeft = moveLeft(mapToMoveLeft)
-
-    assert(resultingGridLeft == leftShiftGrid)
 
 
+#Handles removing and adding the 0's back into grid in the appropriate position depending on the shift
 def handleEmpty(grid, isReverse):
     count = 0
     newArray = []
@@ -50,6 +21,7 @@ def handleEmpty(grid, isReverse):
 
     return newArray
 
+#Handles the shifting and addition of the values that are combined
 def shiftHorizontal(array, isReverse):
     for x in range (0, len(array)):
         firstValue = array[x]
@@ -68,6 +40,7 @@ def shiftHorizontal(array, isReverse):
     filteredArray = handleEmpty(array, isReverse)
     return filteredArray
 
+#Transposes a grid
 def untransposeGrid(grid):
     untransposedGrid = []
     for i in range(len(grid[0])):
@@ -77,18 +50,19 @@ def untransposeGrid(grid):
         untransposedGrid.append(row)
     return untransposedGrid
 
+#Handles left and right shifting, copy row due to by ref passing (not hugely needed, but makes testing easier and grid is small enough that it's not a problem)
 def shiftGridHorizontal(grid, isLeftShift):
     newGrid = []
     for row in grid:
         if isLeftShift:
-            newGrid.append(shiftArrayLeft(list(row)))
+            newGrid.append(shiftArrayLeft(row))
         else: 
-            newGrid.append(shiftArrayRight(list(row)))
+            newGrid.append(shiftArrayRight(row))
 
     return newGrid
 
+#Handles Up and Down shifting, copy row due to by ref passing
 def shiftGridVertical(grid, isUpShift):
-    #Get Number of columns
     numColumns = 0
     if len(grid) > 0:
         numColumns = len(grid[0])    
@@ -98,9 +72,9 @@ def shiftGridVertical(grid, isUpShift):
     for column in range(0, numColumns):
         row = [i[column] for i in grid]
         if isUpShift:
-            modifiedRow = shiftArrayUp(list(row))
+            modifiedRow = shiftArrayUp(row)
         else:
-            modifiedRow = shiftArrayDown(list(row))
+            modifiedRow = shiftArrayDown(row)
         transposedGrid.append(modifiedRow)
 
     #Turn rows back into columns
@@ -123,38 +97,79 @@ def shiftArrayDown(array):
     array.reverse()
     return shiftHorizontal(array, True)
 
+#Test atomic array shifting, one row (or a column posing as a row)
+def ArrayTests(): 
+    assert([4,4,2,0] == shiftArrayLeft([2,2,4,2]))
+    assert([4,2,4,0] == shiftArrayLeft([2,2,2,4]))
+    assert([0,2,4,4] == shiftArrayRight([2,2,2,4]))
+    assert([0,4,4,2] == shiftArrayRight([2,2,4,2]))
+    assert([0,2,4,4] == shiftArrayDown([2,4,2,2]))
+    #Special Cases
+    assert([0,2,4,4] == shiftArrayDown([2,2,2,4]))
+    assert([4,2,4,0] == shiftArrayUp([2,2,2,4]))
+    assert([0,2,4,4] == shiftArrayRight([2,2,2,4]))
+    assert([4,2,4,0] == shiftArrayLeft([2,2,2,4]))
 
+#Test Grid shifts
+def GridTests():
+    start = [[2,2,4,2],[4,2,2,4],[2,2,2,2],[2,4,0,2]]
+    leftShiftGrid = [[4,4,2,0],[4,4,4,0],[4,4,0,0],[2,4,2,0]]
+    assert(leftShiftGrid == shiftGridHorizontal(start, isLeftShift=True))
 
+    start = [[2,2,4,2],[4,2,2,4],[2,2,2,2],[2,4,0,2]]
+    rightShiftGrid = [[0,4,4,2],[0,4,4,4],[0,0,4,4],[0,2,4,2]]
+    assert(rightShiftGrid == shiftGridHorizontal(start, isLeftShift=False))
+
+    start = [[2,2,4,2],[4,2,2,4],[2,2,2,2],[2,4,0,2]]
+    upShiftGrid = [[2,4,4,2],[4,2,4,4],[4,4,0,4],[0,0,0,0]]
+    assert(upShiftGrid == shiftGridVertical(start, isUpShift=True))
+
+    start = [[2,2,4,2],[4,2,2,4],[2,2,2,2],[2,4,0,2]]
+    downShiftGrid = [[0,0,0,0],[2,2,0,2],[4,4,4,4],[4,4,4,4]]
+    assert(downShiftGrid == shiftGridVertical(start, isUpShift=False))
+
+def PlayGame(gridAsString, movesAsString):
+    rows = gridAsString.split("\n")
+    rows = rows[:len(rows) -1]
+
+    Grid = []
+    for row in rows:
+        splitRow = row.split(" ")
+        intRow = []
+        for char in splitRow:
+            intRow.append(int(char))
+
+        Grid.append(intRow)
     
-#assert([4,4,2,0] == shiftLeft([2,2,4,2]))
-#assert([4,2,4,0] == shiftArrayLeft([2,2,2,4]))
-#assert([] == shiftArrayRight([2,2,2,4]))
-#assert([0,4,4,2] == shiftRight([2,2,4,2]))
-#assert([0,2,4,4] == shiftDown([2,4,2,2]))
+    moveArray = movesAsString.split(" ")
 
-#Special Cases
-#assert([0,2,4,4] == shiftArrayDown([2,2,2,4]))
-#assert([4,2,4,0] == shiftArrayUp([2,2,2,4]))
+    print("Your Start Grid:")
+    for row in Grid:
+        print(row)
 
-#assert([0,2,4,4] == shiftArrayRight([2,2,2,4]))
-#assert([4,2,4,0] == shiftArrayLeft[2,2,2,4])
+    for move in moveArray:
+        match move:
+            case "D":
+                Grid=shiftGridVertical(Grid,isUpShift=False)
+            case "U":
+                Grid=shiftGridVertical(Grid,isUpShift=True)
+            case "R":
+                Grid=shiftGridHorizontal(Grid,isLeftShift=False)
+            case "L":
+                Grid=shiftGridHorizontal(Grid,isLeftShift=True)
+        
+    print("Your Final Grid:")
+    for row in Grid:
+        print(row)
 
-
-#shiftArrayLeft([2,2,2,4])
-
-OG = [[2,2,4,2],[4,2,2,4],[2,2,2,2],[2,4,0,2]]
-leftShiftGrid = [[4,4,2,0],[4,4,4,0],[4,4,0,0],[2,4,2,0]]
-rightShiftGrid = [[0,4,4,2],[0,4,4,4],[0,0,4,4],[0,2,4,2]]
-upShiftGrid = [[2,4,4,2],[4,2,4,4],[4,4,0,4],[0,0,0,0]]
-downShiftGrid = [[0,0,0,0],[2,2,0,2],[4,4,4,4],[4,4,4,4]]
-
-assert(leftShiftGrid == shiftGridHorizontal(OG, isLeftShift=True))
-assert(rightShiftGrid == shiftGridHorizontal(OG, isLeftShift=False))
-assert(downShiftGrid == shiftGridVertical(OG, isUpShift=False))
-assert(upShiftGrid == shiftGridVertical(OG, isUpShift=True))
+ArrayTests()
+GridTests()
 
 board = """2 2 4 2
 4 2 2 4
 2 2 2 2
 2 4 0 2
 """
+moves = "D R D L U"
+
+PlayGame(board, moves)
